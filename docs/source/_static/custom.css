@@ -1,0 +1,51 @@
+/* Round the search box like OpenMC docs */
+.bd-search input.form-control {
+    border-radius: 20px;   /* makes it pill-shaped */
+    padding: 6px 12px;
+    border: 1px solid #ccc;
+}
+
+/* Optional: tweak focus style */
+.bd-search input.form-control:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 4px rgba(0, 123, 255, 0.4);
+}
+
+/* Justify all body text in the documentation */
+.wy-nav-content-wrap .rst-content {
+    text-align: justify;
+}
+
+/* Optional: Keep code blocks and tables left-aligned for clarity */
+.rst-content pre, .rst-content table {
+    text-align: left;
+}
+
+/* 1. Force tables to stay within the page width and wrap text */
+.wy-table-responsive table {
+    width: 100% !important;
+    table-layout: fixed !important; /* Forces the :widths: percentages in RST */
+}
+
+/* 2. Target table cells directly to reduce font size and spacing */
+.wy-table-responsive table td, 
+.wy-table-responsive table th {
+    font-size: 12px !important;      /* Smaller, professional font size */
+    line-height: 1.3 !important;     /* Tighter line height for long references */
+    padding: 6px 10px !important;    /* Reduces cell height for a cleaner look */
+    white-space: normal !important;  /* Allows text to wrap to the next line */
+    word-wrap: break-word !important;/* Breaks long class names if they hit the edge */
+    vertical-align: top !important;  /* Keeps multi-line rows aligned at the top */
+}
+
+/* 3. Bold the first column (The Method names) */
+.wy-table-responsive table td:first-child {
+    font-weight: bold;
+    color: #2980b9; /* Optional: Sets the method names to a subtle blue */
+}
+
+/* 4. Optional: Add a slight background color to headers to distinguish them */
+.wy-table-responsive table th {
+    background-color: #f3f6f6 !important;
+    font-size: 13px !important;      /* Headers slightly larger for hierarchy */
+}

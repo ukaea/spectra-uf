@@ -1,0 +1,30 @@
+# python files
+*.pyc
+__pycache__/
+
+# build and distribution
+dist/
+build/
+lib/
+bin/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# temp files/mac files
+.DS_Store
+
+
+pylint.txt
+.coverage
+
+spectrauf.egg-info/*
+venv/*
+
+# logging outputs
+*.log
