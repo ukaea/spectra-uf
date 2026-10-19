@@ -69,6 +69,7 @@ jobs:
     needs: [lint, coverage]
     runs-on: ubuntu-latest
     permissions:
+      content: read
       pages: write
       id-token: write
     environment:
