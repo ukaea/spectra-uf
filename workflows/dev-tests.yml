@@ -1,0 +1,29 @@
+name: Dev tests
+
+on:
+  push:
+    branches: [dev]
+
+concurrency:
+  group: dev-tests
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    uses: ./.github/workflows/tests.yml
+
+  # Same stable check name as feature-tests.yml, so the ruleset can require it
+  tests-passed:
+    needs: tests
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fail unless all tests succeeded
+        env:
+          RESULT: ${{ needs.tests.result }}
+        run: |
+          echo "Test result: $RESULT"
+          [ "$RESULT" = "success" ]

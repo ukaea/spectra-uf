@@ -12,11 +12,10 @@ permissions:
   contents: read
 
 jobs:
-  tests:
-    uses: ./.github/workflows/tests.yml
-
+  # ----------
+  # Linting
+  # ----------
   lint:
-    needs: tests
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -39,8 +38,11 @@ jobs:
             pylint-report.txt
             public/pylint.svg
 
+  # -----------------------------------------------------------
+  # Coverage (also runs the test suite once, on Python 3.13;
+  # a test failure fails this job and blocks the docs deploy)
+  # -----------------------------------------------------------
   coverage:
-    needs: tests
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -60,6 +62,9 @@ jobs:
           name: coverage
           path: public/coverage.svg
 
+  # ---------------
+  # Docs (GitHub Pages)
+  # ---------------
   docs:
     needs: [lint, coverage]
     runs-on: ubuntu-latest

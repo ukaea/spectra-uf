@@ -12,7 +12,7 @@ jobs:
     if: github.ref_name != 'main' && github.ref_name != 'dev'
     uses: ./.github/workflows/tests.yml
 
-  # Single stable check name to require in the dev ruleset
+  # Single stable check name to require in rulesets
   tests-passed:
     needs: tests
     if: always()
