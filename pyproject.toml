@@ -7,7 +7,7 @@ name = "spectrauf"
 authors = [{name = "UKAEA"}]
 description = "SPECTRA-UF"
 version = "0.1.0-dev"
-requires-python = ">=3.10"
+requires-python = ">=3.12"
 license = "MIT"
 license-files = ["LICENSE"]
 classifiers = [
