@@ -1,0 +1,100 @@
+name: Main pipeline
+
+on:
+  push:
+    branches: [main]
+
+concurrency:
+  group: main-pipeline
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  # ----------
+  # Linting
+  # ----------
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+      - run: pip install pylint anybadge
+      - name: Run pylint and build badge
+        run: |
+          mkdir -p public
+          pylint spectrauf | tee pylint-report.txt || true
+          score=$(sed -n 's/^Your code has been rated at \([-0-9.]*\)\/.*/\1/p' pylint-report.txt)
+          anybadge --value="$score" --file=public/pylint.svg pylint
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: lint
+          path: |
+            pylint-report.txt
+            public/pylint.svg
+
+  # -----------------------------------------------------------
+  # Coverage (also runs the test suite once, on Python 3.13;
+  # a test failure fails this job and blocks the docs deploy)
+  # -----------------------------------------------------------
+  coverage:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+      - run: pip install .[dev] coverage anybadge
+      - name: Run coverage and build badge
+        run: |
+          coverage run -m unittest tests/testsuite.py
+          total=$(coverage report | tail -1 | awk '{print $4}' | sed 's/%//')
+          mkdir -p public
+          anybadge --value="$total" --file=public/coverage.svg coverage
+      - uses: actions/upload-artifact@v4
+        with:
+          name: coverage
+          path: public/coverage.svg
+
+  # ---------------
+  # Docs (GitHub Pages)
+  # ---------------
+  docs:
+    needs: [lint, coverage]
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+      - run: pip install .[dev,docs]
+      - run: sphinx-build -b html docs/source public
+      - uses: actions/download-artifact@v4
+        with:
+          name: lint
+          path: lint-out
+      - uses: actions/download-artifact@v4
+        with:
+          name: coverage
+          path: coverage-out
+      - run: |
+          cp lint-out/public/pylint.svg public/
+          cp coverage-out/coverage.svg public/
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: public
+      - id: deployment
+        uses: actions/deploy-pages@v4
