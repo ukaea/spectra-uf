@@ -1,15 +1,17 @@
 [build-system]
-requires = ["setuptools >= 61.0"]
+requires = ["setuptools >= 77.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "spectrauf"
-authors = [{name = "UKAEA"}]
+version = "0.1.0b1"
 description = "SPECTRA-UF"
-version = "0.1.0-dev"
-requires-python = ">=3.12"
+readme = "README.md"
+authors = [{name = "UKAEA"}]
 license = "MIT"
 license-files = ["LICENSE"]
+requires-python = ">=3.12"
+keywords = ["spectra", "uncertainty", "nuclear", "fusion"]   # adjust to suit
 classifiers = [
   "Development Status :: 4 - Beta",
   "Intended Audience :: Developers",
@@ -18,40 +20,42 @@ classifiers = [
   "Natural Language :: English",
   "Topic :: Scientific/Engineering",
   "Programming Language :: Python :: 3",
-  "Programming Language :: Python :: 3.10",
-  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3 :: Only",
   "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3.13",
-  "Programming Language :: Python :: 3.14"
+  "Programming Language :: Python :: 3.14",
 ]
 dependencies = [
-  "numpy>=1.23.0",
-  "scipy>=1.9.0",
-  "matplotlib>=3.5.0",
-  "setuptools>=61.0.0"
+  "numpy>=1.26.0",
+  "scipy>=1.11.2",
+  "matplotlib>=3.8.0",
 ]
 
-[tool.setuptools]
-packages = ["spectrauf"]
-
-[tool.setuptools.package-data]
-"spectrauf" = ["data/fispact_reference_spectra/*.json", "data/*.json"]
+[project.urls]
+Homepage = "https://github.com/ukaea/spectra-uf"
+Documentation = "https://ukaea.github.io/spectra-uf/"
+Issues = "https://github.com/ukaea/spectra-uf/issues"
+Changelog = "https://github.com/ukaea/spectra-uf/blob/main/CHANGELOG.md"
 
 [project.optional-dependencies]
-docs = [
-  "sphinx>=7.0.0",
-  "myst-parser",
-  "sphinx-autodoc-typehints",
-  "sphinxcontrib-katex",
-  "sphinx-numfig",
-  "jupyter",
-  "sphinxcontrib-svg2pdfconverter",
-  "sphinx-rtd-theme>=2.0.0",
-  "sphinx_copybutton"
-]
 dev = [
   "pylint>=3.0.0",
   "black>=24.0.0",
   "pytest>=7.0.0",
-  "pytest-cov>=4.0.0"
+  "pytest-cov>=4.0.0",
+  "coverage>=7.0.0",
+  "anybadge",
 ]
+docs = [
+  "sphinx>=7.0.0",
+  "myst-parser",
+  "sphinx-rtd-theme>=2.0.0",
+  "sphinx_copybutton",
+  "sphinx-autodoc-typehints",
+]
+
+[tool.setuptools.packages.find]
+include = ["spectrauf*"]
+
+[tool.setuptools.package-data]
+spectrauf = ["data/fispact_reference_spectra/*.json", "data/*.json"]
