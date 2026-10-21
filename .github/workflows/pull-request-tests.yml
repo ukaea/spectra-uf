@@ -1,4 +1,4 @@
-name: PR tests
+name: Tests on pull requests and manual runs
 
 on:
   pull_request:
@@ -13,19 +13,22 @@ permissions:
   contents: read
 
 jobs:
-  tests:
+  run-tests:
+    name: Run tests
     # Manual runs are for feature branches only
     if: github.event_name == 'pull_request' || (github.ref_name != 'dev' && github.ref_name != 'main')
-    uses: ./.github/workflows/tests.yml
+    uses: ./.github/workflows/run-tests.yml
 
-  tests-passed:
-    needs: tests
+  # One stable check name for the rulesets to require
+  all-tests-passed:
+    name: All tests passed
+    needs: run-tests
     if: always()
     runs-on: ubuntu-latest
     steps:
-      - name: Fail unless all tests succeeded
+      - name: Fail unless every test job succeeded
         env:
-          RESULT: ${{ needs.tests.result }}
+          RESULT: ${{ needs.run-tests.result }}
         run: |
           echo "Test result: $RESULT"
           [ "$RESULT" = "success" ]

@@ -1,0 +1,37 @@
+name: Coverage
+
+on:
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  coverage:
+    name: Test coverage and badge
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.13
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+
+      - name: Install package with dev dependencies
+        run: pip install .[dev] coverage anybadge
+
+      - name: Run tests under coverage and generate badge
+        run: |
+          mkdir -p badges
+          coverage run -m unittest tests/testsuite.py
+          total=$(coverage report | tail -1 | awk '{print $4}' | sed 's/%//')
+          anybadge --value="$total" --file=badges/coverage.svg coverage
+
+      - name: Upload coverage badge
+        uses: actions/upload-artifact@v4
+        with:
+          name: badge-coverage
+          path: badges/coverage.svg

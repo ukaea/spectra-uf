@@ -1,0 +1,65 @@
+name: Publish docs and badges
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: publish-docs
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    name: Lint
+    uses: ./.github/workflows/lint.yml
+
+  coverage:
+    name: Coverage
+    uses: ./.github/workflows/coverage.yml
+
+  build-and-deploy:
+    name: Build and deploy docs to GitHub Pages
+    needs: [lint, coverage]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.13
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+
+      - name: Install package with dev and docs dependencies
+        run: pip install .[dev,docs]
+
+      - name: Build Sphinx docs
+        run: sphinx-build -b html docs/source public
+
+      - name: Download badges into the site
+        uses: actions/download-artifact@v4
+        with:
+          pattern: badge-*
+          merge-multiple: true
+          path: public
+
+      - name: Upload site as Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: public
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
