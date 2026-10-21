@@ -20,14 +20,23 @@ jobs:
           python-version: "3.13"
           cache: pip
 
-      - name: Install pylint and anybadge
-        run: pip install pylint anybadge
+      # Install the package itself so pylint can resolve numpy, scipy, etc.
+      - name: Install package with dev dependencies
+        run: pip install .[dev] pylint anybadge
 
-      - name: Run pylint and generate badge
+      # Lint findings don't fail the job; the score is reported via the badge
+      - name: Run pylint
+        run: pylint spectrauf --reports=n --score=y | tee pylint-report.txt || true
+
+      - name: Generate pylint badge
         run: |
-          mkdir -p badges
-          pylint spectrauf | tee pylint-report.txt || true
           score=$(sed -n 's/^Your code has been rated at \([-0-9.]*\)\/.*/\1/p' pylint-report.txt)
+          if [ -z "$score" ]; then
+            echo "::error::Could not read a pylint score. See the 'Run pylint' step output."
+            exit 1
+          fi
+          echo "### Pylint score: $score/10" >> "$GITHUB_STEP_SUMMARY"
+          mkdir -p badges
           anybadge --value="$score" --file=badges/pylint.svg pylint
 
       - name: Upload pylint report
