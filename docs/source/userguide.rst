@@ -18,26 +18,26 @@ The unfolding methods available are listed below in :numref:`table_unfolding_met
      - Description
      - References
    * - **NonlinearLeastSquareIterativeA**
-     - An non-linear least square method which iteratively adjusts a prior distribution in order to minimize the difference in squares between the measured and the calculated values. This is based on the underlying mathematics of the United States Air Force (USAF) code SAND-II, released in 1967.
-     - A computer-automated iterative method for neutron flux spectra determination by foil activatoin. W. N. McElroy, et al. USAF report. 1967.
+     - A non-linear least square method which iteratively adjusts a prior distribution in order to minimize the difference in squares between the measured and the calculated values. This is based on the underlying mathematics of the United States Air Force (USAF) code SAND-II, released in 1967.
+     - A computer-automated iterative method for neutron flux spectra determination by foil activation. W. N. McElroy, et al. USAF report. 1967.
    * - **NonlinearLeastSquareIterativeB**
-     - An non-linear least square method which iteratively adjusts a prior distribution in order to minimize the difference in squares between the measured and the calculated values. This is based on the underlying mathematics of the HEPRO code GRAVEL, written my M. Matzke.
-     - Propagation of uncertainties in unfolding procedures. M. Matzke. Nuclear Instruments and Methods in Physical Research A. 2002. Vol 476. P230-243.
+     - A non-linear least square method which iteratively adjusts a prior distribution in order to minimize the difference in squares between the measured and the calculated values. This is based on the underlying mathematics of the HEPRO code GRAVEL, written by M. Matzke.
+     - Propagation of uncertainties in unfolding procedures. M. Matzke. Nuclear Instruments and Methods in Physics Research A. 2002. Vol 476. P230-243.
    * - **NonlinearLeastSquareIterativeC**
-     - An non-linear least square method which iteratively adjusts a prior distribution in order to minimize the difference in squares between the measured and the calculated values. This is based on the underlying mathematics of the SPUNIT code, written my L. W. Brackenbush and R. I. Scherpelz in 1984.
+     - A non-linear least square method which iteratively adjusts a prior distribution in order to minimize the difference in squares between the measured and the calculated values. This is based on the underlying mathematics of the SPUNIT code, written by L. W. Brackenbush and R. I. Scherpelz in 1984.
      - A computer code for multisphere unfolding. L. W. Brackenbush, R. I. Scherpelz. Pacific Northwest Laboratories (PNL) report. 1984.
    * - **MaximumPotentialEntropy**
-     - An algorithm which aims to find a solution distribution by minimizing both the squares of the measured and calculated values, along with the minimization of the Kullback-Leibler divergence of the a priori and the solution distributions. This is based on the underlying mathematics of the MAXED code written by M. Reginatto and P. Goldhagen in 1998.
-     - MAXED, a computer code for the decomvoution of multisphere neutron spectrometer data using the maximum entropy method. M. Reginatto and P. Goldhagen. Environmental Measurements Laboratory (EML) report, 1998. 
+     - A algorithm which aims to find a solution distribution by minimizing both the squares of the measured and calculated values, along with the minimization of the Kullback-Leibler divergence of the a priori and the solution distributions. This is based on the underlying mathematics of the MAXED code written by M. Reginatto and P. Goldhagen in 1998.
+     - MAXED, a computer code for the deconvolution of multisphere neutron spectrometer data using the maximum entropy method. M. Reginatto and P. Goldhagen. Environmental Measurements Laboratory (EML) report, 1998. 
    * - **Parametric**
-     - A parametric method which sums together known physical distributions found within distributions, such as Watt spectra, Maxwellian and Gaussian distributions, and optimises the parameters of each distributoin to minimize the square of the calculated and measured values.
+     - A parametric method which sums together known physical distributions found within distributions, such as Watt spectra, Maxwellian and Gaussian distributions, and optimises the parameters of each distribution to minimize the square of the calculated and measured values.
      - Custom algorithm, written by R. Worrall.
 
 Data handlers
 -------------
 
 The data provided to each unfolding method can be provided via text files (comma or space 
-seperated value, csv) or set via a .set method. There is a generic DataHandler class which 
+separated value, csv) or set via a .set method. There is a generic DataHandler class which 
 has a common interface with all unfolding methods, and can be used to load data once and 
 then pass the data to a range of unfolding methods. Where sets of data have uncertainties 
 or covariances attached, these can optionally be loaded at the same time. An example can 
@@ -51,14 +51,14 @@ be found below in :numref:`code_data_handler`.
    import spectrauf as suf
    import matplotlib.pyplot as plt
    
-   # intialise the data handler and load data
+   # initalise the data handler and load data
    data = suf.datahandler.DataHandler()
    data.load('a_priori', 'path/to/a_priori.csv')
    data.load('group_structure', 'path/to/group_structure.csv')
    data.load('response_matrix', 'path/to/response_matrix.csv')
    data.load('measured', 'path/to/measured.csv', uncertainties='path/to/measured_uncertainties.csv')
 
-   # we can access the data and plot the spectra privded.
+   # we can access the data and plot the spectra provided.
    fig, ax = plt.subplots(1)
    ax.step(data.group_structure[0], data.a_priori)
    ax.set_xlabel('Energy (MeV)')
@@ -72,8 +72,8 @@ SPECTRA-UF contains a set of utilities which can be used to pre and post process
 
 See API docs: :mod:`spectrauf.util`
 
-* re-bining of a histogram, either using a linear or log space division method.
-* conversion of histrograms to and from per unit methargy
+* re-binning of a histogram, either using a linear or log space division method.
+* conversion of histograms to and from per unit lethargy
 
 Example usage of these are shown in the code below :numref:`code_rebinning_and_lethargy`.
 
@@ -85,7 +85,7 @@ See API docs: rebin :func:`spectrauf.util.rebin`.
 The re-binning method can be used to change the bin boundaries of a histogram, but care should be
 taken not to try and re-bin to a finer set of bins as information can be lost.
 
-The re-binning method also allows the division of bins via either linear space (deafult) or via 
+The re-binning method also allows the division of bins via either linear space (default) or via 
 logarithmic space for non-linearly spaced hisogram boundaries.
 
 Per unit lethargy conversion
@@ -93,8 +93,8 @@ Per unit lethargy conversion
 
 When plotting and comparing histograms, such as flux spectra, it is often useful to convert 
 histogram distributions into units of per unit lethargy. This allows a visualisation of the distribution taking
-into account the widths of unequal hisogram bounds. The definiton of lethargy is shown in equation 
-:eq:`eq_lethargy`, where U is the lethargy of a given hisogram bin, and :math:`B_{lower}` and :math:`B_{upper}` 
+into account the widths of unequal hitsogram bounds. The definition of lethargy is shown in equation 
+:eq:`eq_lethargy`, where U is the lethargy of a given histogram bin, and :math:`B_{lower}` and :math:`B_{upper}` 
 are the lower and upper bounds of the bin.
 
 .. math:: U = ln(\frac{B_{upper}}{B_{lower}})
@@ -119,10 +119,10 @@ Non-linear least squares
 
 The non-linear least square method **NonlinearLeastSquareIterativeB** requires an 
 initial *a priori* distribution along with a set of *measured* values and their 
-*uncertainties*, and a *reponse matrix*.
+*uncertainties*, and a *response matrix*.
 
 This is an iterative method and is purely deterministic, and will run until a user defined criteria
-is met. By default this is a reduced chi-squeared per degree of freedeom on unity between the measured
+is met. By default this is a reduced chi-squared per degree of freedom of unity between the measured
 and the calculated values, but can be set to a fixed number of iterations.
 
 An example of the NonlinearLeastSquareIterativeB methodology can be found below. 

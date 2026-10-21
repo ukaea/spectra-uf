@@ -1,3 +1,6 @@
+import os
+import sys
+
 # Configuration file for the Sphinx documentation builder.
 #
 # For the full list of built-in configuration values, see the documentation:
@@ -6,10 +9,17 @@
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
+from importlib.metadata import PackageNotFoundError, version as _pkg_version
+
 project = 'spectrauf'
-copyright = '2025, R. Worrall'
-author = 'R. Worrall'
-release = '0.1'
+copyright = '2025, UKAEA'      # was 'R. Worrall'; pyproject.toml says UKAEA, so pick one
+author = 'UKAEA'
+
+try:
+    release = _pkg_version("spectrauf")                # full string, e.g. "0.1.0b1"
+except PackageNotFoundError:
+    release = "unknown"
+version = ".".join(release.split(".")[:2])             # short form, e.g. "0.1"
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
@@ -24,7 +34,8 @@ extensions = [
     "sphinx.ext.napoleon",  # for Google/NumPy style docstrings
     "myst_parser",          # if you want Markdown support
     "sphinx.ext.mathjax",   # enable MathJax rendering
-    "sphinx_copybutton",    # for inline code copy button
+    "sphinx_copybutton",    # for inline code copy button,
+    "sphinx_autodoc_typehints"
 ]
 
 # Tell MyST to parse dollar math
@@ -33,17 +44,11 @@ myst_enable_extensions = [
     "amsmath",      # allows LaTeX math environments
 ]
 
-autosummary_generate = False  # make Sphinx create stub pages automatically
-
 html_theme = 'sphinx_rtd_theme'
 
 html_theme_options = {
     "navigation_depth": 4,
     "collapse_navigation": False,
-}
-
-html_sidebars = {
-    "**": ["search-field.html", "globaltoc.html", "sidebar-nav-bs.html", "sidebar-ethical-ads.html"],
 }
 
 templates_path = ['_templates']
@@ -72,6 +77,5 @@ numfig_format = {
 # Math settings (usually part of sphinx.ext.mathjax)
 math_number_all = True  # Set to True to number EVERY equation
 
-import os
-import sys
+
 sys.path.insert(0, os.path.abspath(".."))  # so autodoc can find your package
