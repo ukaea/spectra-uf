@@ -1,0 +1,44 @@
+name: Lint
+
+on:
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  pylint:
+    name: Pylint score and badge
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.13
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+
+      - name: Install pylint and anybadge
+        run: pip install pylint anybadge
+
+      - name: Run pylint and generate badge
+        run: |
+          mkdir -p badges
+          pylint spectrauf | tee pylint-report.txt || true
+          score=$(sed -n 's/^Your code has been rated at \([-0-9.]*\)\/.*/\1/p' pylint-report.txt)
+          anybadge --value="$score" --file=badges/pylint.svg pylint
+
+      - name: Upload pylint report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pylint-report
+          path: pylint-report.txt
+
+      - name: Upload pylint badge
+        uses: actions/upload-artifact@v4
+        with:
+          name: badge-pylint
+          path: badges/pylint.svg
