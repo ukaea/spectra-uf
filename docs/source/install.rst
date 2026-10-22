@@ -1,20 +1,20 @@
 Installation
 ============
 
-SPECTRA-UF requires Python 3.12 or newer. The current release is a **beta**
+SPECTRA-UF requires Python 3.12 or newer. The current version is a **beta**
 (|release|), so the API may change between minor versions.
 
-Install a release
------------------
+Install
+-------
 
-Releases are tagged on GitHub. To install a specific release:
+To install directly from GitHub:
 
 .. _bash_install_end_user:
 .. code-block:: bash
    :linenos:
-   :caption: installing a tagged release of SPECTRA-UF
+   :caption: installing SPECTRA-UF from GitHub
 
-   python -m pip install git+https://github.com/ukaea/spectra-uf.git@v0.1.0b1
+   python -m pip install git+https://github.com/ukaea/spectra-uf.git
 
 Or to install from a local clone of the default branch:
 
