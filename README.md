@@ -23,10 +23,10 @@ The documentation is available at <https://ukaea.github.io/spectra-uf/>.
 
 ## Installation
 
-SPECTRA-UF requires Python 3.12 or newer. To install a tagged release:
+SPECTRA-UF requires Python 3.12 or newer. To install directly from GitHub:
 
 ```bash
-python -m pip install git+https://github.com/ukaea/spectra-uf.git@v0.1.0b1
+python -m pip install git+https://github.com/ukaea/spectra-uf.git
 ```
 
 Or to install from a local clone:
